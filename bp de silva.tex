@@ -1,0 +1,314 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{indentfirst}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\theoremstyle{plain}
+\newtheorem{veta}{Věta}[section]
+
+\theoremstyle{definition}
+\newtheorem{definice}[veta]{Definice}
+
+\newtheorem{lemma}[veta]{Lemma}
+\newtheorem*{znaceni}{Značení}
+
+\title{Bakalářská práce WIP}
+\author{Benjamin de Silva}
+\date{October 2023}
+
+\begin{document}
+
+\maketitle
+\newpage
+\section*{Úvod}
+Motivace
+\newpage
+
+\section{Definice (hlavní zdroj - linalg skripta}
+V této kapitole si zavedeme základní definice potřebné pro práci s maticemi, operace na nich a různé typy matic, které budeme používat.
+
+\begin{definice}[Matice]
+
+\emph{Maticí} typu m $\times$ n nad tělesem \textbf{T} rozumíme obdelníkové schéma prvků z tělesa \textbf{T} s m řádky a n sloupci. Matice typu m $\times$ m se nazývá \emph{čtvercová matice řádu m}. Matice typu m $\times$ 1 se nazýva \emph{sloupcový aritmetický vektor} a matice typu 1 $\times$ m se nazývá \emph{řádkový aritmetický vektor}. Zápisem $A=(a_{ij})_{m\times n}$ rozumíme matici typu $m\times n$ s prvkem $a_{ij}\in T$ na pozici (i,j).
+\end{definice}
+    V rámci této práce budeme uvažovat matice nad tělesem $T=\mathbb{C}$
+
+\begin{definice}[Typy matic]
+Nechť A je čtvercová matice řádu n. Pak řekneme, že
+\begin{itemize}
+    \item A je \emph{nulová}, pokud $a_{ij}=0, \forall i,j \in\{1,...,n\}$,
+    \item A je \emph{jednotková}, pokud $a_{ij}=0$ pro $i=j$ a $a_{ij}=0$ jinak,
+    \item A je \emph{diagonální}, pokud $a_{ij}=0$ pro $i\neq j$,
+    \item A je \emph{horní trojuhelníková}, pokud $a_{ij}=0$ pro $i>j$,
+    \item A je \emph{dolní trojuhelníková}, pokud $a_{ij}=0$ pro $i<j$,
+    \item A je \emph{permutační}, pokud má v každém řádku a sloupci právě jeden prvek 1 a zbytek jsou nuly,
+    \item A je \emph{symetrická}, pokud $a_{ij}=a_{ji}\;, \forall i,j \in\{1,...,n\}$,
+    \item A je \emph{řídká}, pokud většina prvků matice je nulových.
+\end{itemize}
+\end{definice}
+
+\begin{znaceni}
+    Budeme značit jednotkovou matici $\mathbf{I_{m \times n}}$ a nulovou matici $\mathbf{0_{m \times n}}$, jsou-li obě matice typu $m\times n $. Pokud jsou matice čtvercové řádu n, tak značíme $\mathbf{I_n, 0_n}$ a v případě, že je to z kontextu zřejmé, tak index může být vynechán.
+\end{znaceni}
+
+\begin{definice}[Sčítání matic]
+Nechť A,B jsou matice stejného typu m $\times$ n, pak definujeme jejich součet jako matici $$A+B=(a_{ij}+b_{ij})_{m \times n}$$
+\end{definice}
+Nechť A,B,C jsou matice stejného typu, pak operace sčítání matic má následující vlastnosti
+\begin{itemize}
+    \item $(A+B)+C=A+(B+C)$,
+    \item  $A+0=A$,
+    \item $A+(-A)=0$,
+    \item $A+B=B+A$.
+    
+\end{itemize}
+\newpage
+
+\begin{definice}[Násobení matice skalárem]
+Nechť A je matice typu $m \times n$ a $t \in \mathbb{R}$. Pak definujeme t-násobek matice A jako matici $$t\cdot A = tA = (t \cdot a_{ij})_{m \times n}$$
+    
+\end{definice}
+Nechť A,B jsou matice stejného typu a $s,t \in \mathbb{R}$. Pak platí následující vlastnosti
+\begin{itemize}
+    \item $s(tA)=(st)A$,
+    \item $1A=A$,
+    \item $-A=(-1)A$,
+    \item $(s+t)A=sA+tA$,
+    \item $s(A+B)=sA+sB$.
+\end{itemize}
+
+\begin{definice}[Transponovaná matice]
+Nechť A je matice typu $m \times n$, pak  transponovanou maticí k matici A rozumíme matici $$A^T=(b_{ij})_{n\times m},$$ kde $b_{ij}=a_{ji}$ pro $i \in \{1,\hdots,n\}, j\in \{1,\hdots,m\}$.
+\end{definice}
+Z definice symetrické matice a transponované matice plyne, že pro A symetrickou platí $A^T=A$.
+
+Nechť A,B jsou matice stejného typu $m\times n$ a $s \in \mathbb{C}$, pak platí
+\begin{itemize}
+    \item $(A^T)^T=A$
+    \item $(A^T+B^T)=A^T+B^T$
+    \item $(sA)^T=sA^T$
+\end{itemize}
+
+\begin{znaceni}
+Někdy je vhodné nahlížet na matici jako na posloupnost sloupcových vektorů, tedy matici $A=(a_{ij})_{m \times n}$ můžeme zapsat jako $A=( \mathbf{a_1}|\mathbf{a_2}|...|\mathbf{a_n})$, kde $\mathbf{a_i}=(a_{1i},a_{2i},\hdots,a_{mi})^T,i \in \{1,\hdots,n\}$ je i-tý m-složkový sloupcový aritmetický vektor matice A,
+\end{znaceni}
+
+\begin{definice}[Součin matice a vektoru]
+Nechť $A=( \mathbf{a_1}|\mathbf{a_2}|...|\mathbf{a_n})$ je matice typu $m \times n$ a $b=(b_1,b_2,\hdots,b_n)^T$ je aritmetický sloupcový vektor. Pak definujeme součin matice A s vektorem b jako $$A\cdot b= b_1 \mathbf{a_1} + b_2 \cdot \mathbf{a_2}+\hdots+b_n\mathbf{a_n},$$ což je m-složkový sloupcový vektor.
+\end{definice}
+
+
+\begin{definice}[Součin dvou matic]
+Nechť A je matice typu $m \times n$ a $B=(\mathbf{b_1},\hdots,\mathbf{b_k})$ je matice typu $n \times k$. Pak součin matic A a B je $$AB=(A\mathbf{b_1},A\mathbf{b_2},\hdots,A\mathbf{b_k}),$$ což je matice typu $m \times k$.
+\end{definice}
+Ze zavedených definic už můžeme začít řešit úlohu soustav lineárních rovnic.
+Mějme zadanou matici A typu $m \times n$ a $b=(\mathbf{b_1},\hdots,\mathbf{b_m})^T$ m-složkový aritmetický vektor. Pak hledáme $x=(\mathbf{x_1},\hdots,\mathbf{x_n})^T$ sloupcový vektor takový, že platí rovnost $\mathbf{Ax=b}$. Každý takový vektor $\mathbf{x}$ nazveme řešením soustavy linearních rovnic matice A s pravou stranou $\mathbf{b}$.
+
+\begin{definice}[Inverzní matice]
+Nechť A je matice typu $m \times n $. Pak
+\begin{itemize}
+    \item matici X nazveme inverzní k A zprava, pokud platí $AX=I_m$
+    \item matici X nazveme inverzní k A zleva, pokud platí $AX=I_n$
+    \item je-li A čtvercová řádu n a matice X taková, že $AX=XA=I_n$, pak X nazveme inverzní k matici A, matici X značíme $A^{-1}$ a matici A nazveme invertibilním
+\end{itemize}
+\end{definice}
+
+\begin{definice}[Regulární matice]
+    Matici A řádu n nazveme regulární, pokud je zobrazení $f_A:\mathbb{C}^n \rightarrow \mathbb{C}^n,x\mapsto Ax$ určené maticí A bijektivní. Matice A, která není regulární, se nazývá singulární.
+\end{definice}
+    Pro čtvercovou matici A platí následující ekvivalence
+\begin{itemize}
+    \item Matice A je regulární,
+    \item Zobrazení $f_A$ je na
+    \item Zobrazení $f_A$ je prosté
+    \item Soustava $A\mathbf{x}=0$ má právě jedno řešení $\mathbf{x}=0$
+    \item Matice A je invertovatelná
+    \item Existuje matice X tak, že $AX=I_n$
+    \item Existuje matice Y tak, že $YA=I_n$
+    \item $rank(A)=n$
+\end{itemize}
+\begin{definice}[Obor hodnot, jádro, hodnost]
+Pro matici A typu $m \times n$ definujeme $$\mathbf{R}(A)=\{A\mathbf{x}:x\in \mathbb{R}^n\}\;, \;\mathbf{N}(A)=\{\mathbf{x}\in\mathbf{C}^n\}\;,\; rank(A)\equiv dim(\mathbf{C}(A),$$ kde $R(A)$ nazveme \emph{oborem hodnot} matice A, $\mathbf{N}(A)$ nazveme \emph{jádrem} matice A a rank(A) \emph{hodností} matice A. 
+    
+\end{definice}
+
+\newpage
+
+\section{Metody pro hledání nulového prostoru (zdroj-kniha se stromem}
+V této kapitole popíšeme různé metody pro hledání nulového prostoru matic. Mějme tedy nějakou matici A typu $m \times n$ řádu m, pak hledáme nějakou matici B typu $n \times (n-m)$ řádu $n-m$ tak, že platí $AB=0$, tedy sloupce matice B tvoří bázi nulového prostoru matice A.
+
+Pro každou metodu bude výhodné nejprve rozložit matici A a poté matici B spočítáme za použití získaného rozkladu. Abychom zachovali numerickou stabilitu a řídkost, tak je někdy nutné prohodit některé řádky a sloupce za pomocí permutačních matic, tedy ve skutečnosti hledáme rozklad matice $P_1 E P_2$.
+
+\subsection{Singulární rozklad}
+Singulární rozklad (zkráceně SVD - singular value decomposition) nám umožňuje určit hodnost či normu matice, ortogonální bázi oboru hodnot a nulového prostoru matice, nicméně má vysoké výpočetní nároky. Před zavedením singulárního rozkladu si nejprve zavedeme spektrální rozklad.
+\subsubsection{Spektrálního rozklad}
+\begin{veta}
+Nechť $A \in \mathbb{C}^{m \times n}$, potom platí 
+$$N(A) \bigoplus R(A^*) = \mathbb{C}^n,\;\;N(A) \perp R(A^*),$$
+$$N(A^*) \bigoplus R(A) = \mathbb{C}^m,\;\;N(A^*) \perp R(A).$$
+\end{veta}
+\begin{veta}[Spektrální rozklad pro normální matice]
+Matice A je normální právě tehdy, když existuje unitární matice U a diagonální matice D tak, že
+$$U^{*}AU=D,\;\; tj. \;\;A=UDU^{*}$$
+\end{veta}
+Předpokládejme, že A je hermitovská pozitivně semidefinitní řádu n s hodností r s nezápornými vlastními čísly $\lambda_1 \geq \lambda_2 \geq \hdots \geq \lambda_r > 0$, $\lambda_{r+1}=\hdots=\lambda_n=0$. Podle věty 2.1 existuje rozklad matice A ve tvaru
+$$A=Q\Lambda Q^*,\;\;Q^*Q=I,\;\;\Lambda=diag(\lambda_1,\hdots,\lambda_n).$$
+Sloupce unitární matice $Q=(q_1,\hdots,q_n)$ jsou vlastní vektory matice A a platí
+$$Aq_j=\lambda_jq_j,\;\;j=1,\hdots,n$$
+Vlastní vektory $q_1,q_2,\hdots,q_n$ tvoří ortonormální bázi prostoru $\mathbb{C}^n$.
+
+Ze spektrálního rozkladu matice A vidíme bázi nulového prostoru a oboru hodnot matice A, $$R(A)=span\{q_1,\hdots,q_r\},\;\;N(A)=span\{q_{r+1},\hdots,q_n\},$$ dále nám dává dyadický rozvoj matice A $$A=\sum_{j=1}^{n} \lambda_j q_j q_j^*=\sum_{j=1}^{m}A_j,\;\;A_j=\lambda_j q_j q_j^*,$$ kde matice $A_j$ jsou uspořádány podle spektrální (či Frobeniovy) normy matice a platí $\left \lVert A_j \right \rVert=\left \lVert A_j \right \rVert _F=\lambda_j$, tedy můžeme matici A aproximovat maticí nižší hodnosti $$A^{(k)}=\sum_{j=1}^k A_j.$$
+
+Pro odvození singulárního rozkladu budou důležité spektrální rozklady matic $A^*A$ a $AA^*$. Matice $A^*A$ a $AA^*$ jsou čtvercové hermitovské pozitivně semidefinitní a můžeme uvažovat jejich spektrální rozklad.
+\begin{lemma}
+Pro komplexní matici $A \in \mathbb{C}^{m \times n}$ platí $$N(A^*A)=N(A),\;\;R(A^*A)=R(A^*),$$
+$$N(AA^*)=N(A^*),\;\;R(AA^*)=R(A).$$
+Důsledek \textbf{Věty 2.1} a \textbf{Lemma 2.3} je, že 
+$$dim(R(AA^*))=dim(R(A))=r=dim(R(A^*))=dim(R(A^*A)),$$
+pro A hodnosti r.
+\end{lemma}
+
+Buď $\lambda_j$ vlastní čísla a $v_j$ ortonormální vlastní vektory matice $A^*A$, $j=1,\hdots,n.$ Uvažujme dále bez újmy na obecnosti 
+$$\lambda_1 \geq \hdots \geq \lambda_r > 0,\;\; \lambda_{r+1}=\lambda_n=0,$$
+pak pro $V=(v_1,\hdots,v_n)$ platí 
+$$V^*A^*AV=diag(\lambda_1,\hdots,\lambda_r,0,\hdots,0)$$
+Dále z \textbf{Lemma 2.3} platí, že $v_1,\hdots,v_r$ resp. $v_{r+1},\hdots,v_n$ tvoří ortonormální bázi
+$$R(A^*A)=R(A^*)=span\{v_1,\hdots,v_r\},$$resp. $$N(A)=N(A^*A)=span\{v_{r+1},\hdots,v_n\}.$$
+
+Následující lemma nám dává vztah mezi ortonormálními vektory matic $A^*A$ a $AA^*$.
+\begin{lemma}
+Uvažujme spektrální rozklad matice $A^*A$ s vlastními čísly $\lambda_j$ a $v_j$, $j=1,\hdots,r.$ Potom jsou vektory
+$$u_j \equiv Av_j/\sqrt{\lambda_j},\;\;j=1,\hdots,r$$
+ortonormální vlastní vektory $AA^*$ a platí
+$$AA^*v_j=\lambda_j u_j,\;\; \left \lVert u_j \right \rVert = 1,\;\; j=1,\hdots,r. $$
+Z \textbf{Lemma 2.4} plyne, že vektory $u_j,\;j=1,\hdots,r$ jsou ortonormální vlastní vektory matice $AA^*$, které odpovídají právě m nenulovým vlastním číslům $\lambda_j$ a platí 
+$$Av_j=\sqrt{\lambda_j}u_j,\;\;j=1,\hdots,r.$$
+
+Analogie těchto vztahů platí i pro matici $AA^*$, tj. pokud $u_1,\hdots,u_r$ tvoří ortonormální bázi oboru hodnot matice a $u_{r+1},\hdots,u_m$ tvoří ortonormální bázi doplňku oboru hodnot, pak platí
+$$span\{u_1,\hdots,u_r\}=R(AA^*)=R(A),$$
+$$span\{u_{r+1},\hdots,u_m\}=N(AA^*)=N(A^*).$$
+Z konstrukce plyne, že nenulová vlastní čísla matic $A^*A$ a $AA^*$ se rovnají včetně násobnosti.    
+\end{lemma}
+
+Nyní můžeme popsat singulární rozklad.
+\begin{definice}[Singulární čísla]
+Nechť $A\in\mathbb{C}^{m\times n}$. Odmocniny vlastních čísel matice $A^*A$ nazveme singulárnímy čísly matice A,
+$$\sigma_j=\sqrt{\lambda_j}, \;\;j=1,\hdots,r,\;\;r=rank(A).$$
+Jelikož vlastní čísla $\lambda_j$ jsou uspořádáná od největšího po nejmenší, tak platí
+$$\sigma_1\geq\hdots\geq\sigma_r>0.$$ 
+\end{definice}
+Tedy podle předchozích poznatků platí $Av_j=\sigma_ju_j,\;j=1,\hdots,r$ a můžeme psát
+$$AV=U\Sigma,$$
+kde $$\Sigma=
+    \begin{bmatrix}
+    \Sigma_r & 0 \\
+    0 & 0
+    \end{bmatrix} \in \mathbb{R}^{m \times n},\;\; \Sigma_r=diag(\sigma_1,\hdots,\sigma_r)\in\mathbb{R}^{r\times r},\;\;,$$
+    $$V=(v_1,\hdots,v_n). U=(u_1,\hdots,u_m).$$
+Ekvivalentně
+$$A=U\Sigma V^*,\;\;A^*=V\Sigma^TU^*$$
+
+Vidíme tedy, že pokud bychom byli schopni spočítat singulární rozklad matice A, tak nulový prostor podle \textbf{Lemma 2.3} je roven lineárnímu obalu vektorů $v_{r+1},\hdots,v_n$.
+
+Nyní pomocí SVD můžeme vyřešit úlohu hledání matice B splňující $AB=0$ následovně
+$$P_1AP_2=U\Sigma V,$$
+$$[V_1,V_2]=V^T,$$
+$$B=P_2Q_2$$
+
+\newpage
+
+SVD můžeme vypočítat za pomocí spektrálních rozkladů matic $AA^*$ a $A^*A$, podmíněnost obou matic rovna $\kappa(A)^2$, tedy pokud by byla matice A špatně podmíněna, tak by mohla být singulární čísla spočtena nepřesně.
+
+\begin{veta}
+    Mějme matici A $\in \mathbb{R}^{m \times n}$ řádu m a její singulární čísla $\sigma_1\geq\hdots\geq\sigma_m>0.$
+Potom platí $\left \lVert A \right \rVert = \sigma_1,\;\;
+\left \lVert A \right \rVert _F = (\sigma_1^2+\sigma_2^2+\hdots+\sigma_m^2)^{1/2}.$
+Dále
+$$\left \lVert A \right \rVert \leq \left \lVert A \right \rVert _F \leq \sqrt{m} \left \lVert A \right \rVert.$$
+\end{veta}
+Jelikož platí, že $$\left \lVert A \right \rVert = \sigma_1,\;a\; \left \lVert A^-1 \right \rVert = \sigma_m^-1,$$
+tak dostáváme
+$$\kappa(A)=\sigma_1 / \sigma_n.$$
+
+Další standardní metoda výpočtu SVD probíhá ve dvou krocích
+\begin{enumerate}
+    \item Transformace matice A na bidiagonální tvar užitím unitárních transformací nebo Golub-Kahanovy iterační bidiagonalizace. Transformovaná matice A je ve tvaru 
+    $$B=PAQ,$$
+    kde P,Q jsou unitární a B je bidiagonální.
+    \item Nalezení singulární rozkladu bidiagonální matice B pomocí iteračního procesu, který nuluje její naddiagonální prvky.
+\end{enumerate}
+
+Výpočetní náročnost závisí na iteračním procesu, kterým počítáme singulární rozklad bidiagonální matice. Pokud bychom předpokládali, že máme pouze čtvercové matice řádu m, iterační proces rychle konverguje a nezvyšuje počet operací, pak dolní odhad na počet operací je $\frac{16}{3}  m^3$.
+
+\newpage
+
+\subsection{LU rozklad}
+Jednou z nejdůležitejších metod pro řešení soustav lineárních rovnic je LU rozklad, který nám původní matici A rozloží na součin dolní trojuhelníkové matice a horní trojuhelníkové matice. LU rozklad je založen na Gaussově eliminaci následovně
+$$A \longrightarrow A^{(1)} \equiv \begin{bmatrix}
+    a_{1,1} & a_{1,2} & \hdots & a_{1,n} \\
+    0 & a_{2,2}^1& \hdots & a_{2,n}^1 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    0 & a_{m,2}^1 & \hdots & a_{m,n}^1 
+\end{bmatrix} = M^{-1}A,$$
+kde 
+$$M_1^{-1}=I - m_1 e_1^T = \begin{bmatrix}
+    1 & & & & \\[5pt]
+    -\frac{a_{2,1}}{a_{1,1}} & 1 & & & \\[5pt]
+    -\frac{a_{3,1}}{a_{1,1}} & & 1 & & \\[5pt]
+    \vdots & & & \ddots & \\[5pt]
+    -\frac{a_{m,1}}{a_{1,1}} & & & & 1\\
+\end{bmatrix},\;\;
+m_1=\begin{bmatrix}
+    \frac{a_{2,1}}{a_{1,1}}\\
+    \frac{a_{3,1}}{a_{1,1}}\\
+    \vdots
+    \frac{a_{m,1}}{a_{1,1}}\\
+\end{bmatrix}.$$
+
+Jelikož A má hodnost m, tak permutováním zaručíme, že nikdy nedělíme 0, tedy LU rozklad lze provést.
+V  i-tém kroku bude
+$$A^{(i)} \equiv \begin{bmatrix}
+    a_{1,1} & a_{1,2} & \hdots & & & a_{1,n}\\
+    0 & a_{2,2}^{(1)} & \hdots & & & a_{2,n}^{(1)}\\
+    \vdots & 0 & \ddots & & &\\
+      & \vdots & & a_{i,i}^{(i-1)} & \hdots & a_{i,n}^{(i-1)}\\
+    0 & 0 & & a_{m,i}^{(i-1)} & \hdots & a_{m,n}^{(i-1)}
+
+\end{bmatrix},\;\;
+m_i=\begin{bmatrix}
+    0\\
+    \vdots\\
+    0\\
+    \frac{a_{i+1,i}}{a_{i,i}}\\
+    \frac{a_{i+2,i}}{a_{i,i}}\\
+    \vdots\\
+    \frac{a_{m,i}}{a_{i,i}}\\
+\end{bmatrix}.$$
+Po m-1 krocích dostaneme 
+$$
+U \equiv A^{(m-1)} = M_{m-1}^{-1} \hdots M_{2}^{-1}M_{1}^{-1}A,\;\;
+L \equiv M_1M_2\hdots M_{m-1},
+$$
+kde U je horní trojuhelníková typu $m \times n$ a L je dolní trojuhelníková řádu m s jednotkami na diagonále a upravením rovnosti dostáváme
+$$A=LU=L[U_1 \; U_2],\;\; U_1=[u_1,\hdots,u_m],\;\; U_2=[u_{m+1},\hdots,u_n].$$
+Nyní můžeme LU rozklad použít k řešení naší úlohy $AB=0$
+
+$$
+P_1AP_2= L[U_1 U_2],
+J=U_1^{-1}U_2,
+B=P_2 \begin{bmatrix}
+    -J\\
+    I_{n-m}
+\end{bmatrix}
+.$$
+
+\newpage
+\subsection{Gauss-Jordanova eliminace}
+\subsection{Sloupcová eliminace}
+\subsection{QR rozklad}
+\subsection{LQ rozklad}
+
+
+\end{document}
