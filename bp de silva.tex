@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{indentfirst}
+\usepackage{mathtools}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -13,6 +14,7 @@
 
 \newtheorem{lemma}[veta]{Lemma}
 \newtheorem*{znaceni}{Značení}
+\newtheorem*{algoritmus}{Algoritmus}
 
 \title{Bakalářská práce WIP}
 \author{Benjamin de Silva}
@@ -143,7 +145,7 @@ Pro každou metodu bude výhodné nejprve rozložit matici A a poté matici B sp
 
 \subsection{Singulární rozklad}
 Singulární rozklad (zkráceně SVD - singular value decomposition) nám umožňuje určit hodnost či normu matice, ortogonální bázi oboru hodnot a nulového prostoru matice, nicméně má vysoké výpočetní nároky. Před zavedením singulárního rozkladu si nejprve zavedeme spektrální rozklad.
-\subsubsection{Spektrálního rozklad}
+\subsubsection{Spektrální rozklad}
 \begin{veta}
 Nechť $A \in \mathbb{C}^{m \times n}$, potom platí 
 $$N(A) \bigoplus R(A^*) = \mathbb{C}^n,\;\;N(A) \perp R(A^*),$$
@@ -237,8 +239,42 @@ Další standardní metoda výpočtu SVD probíhá ve dvou krocích
     \item Transformace matice A na bidiagonální tvar užitím unitárních transformací nebo Golub-Kahanovy iterační bidiagonalizace. Transformovaná matice A je ve tvaru 
     $$B=PAQ,$$
     kde P,Q jsou unitární a B je bidiagonální.
-    \item Nalezení singulární rozkladu bidiagonální matice B pomocí iteračního procesu, který nuluje její naddiagonální prvky.
+    \item Nalezení singulární rozkladu bidiagonální matice B pomocí iteračního procesu, který nuluje její naddiagonální prvky, například pomocí implicitního QR algoritmu.
 \end{enumerate}
+
+\begin{algoritmus}[Rozklad SVD pomocí Golub-Kahanovy iterační bidiagonalizace]
+Nejprve provedeme Golub-Kahanovu iterační bidiagonalizaci 
+\begin{flalign*}
+    &\mathbf{Vstup} \; A, \; v &&&\\
+    &w_0 \coloneqq 0 &&& \\
+    &\delta_1 \coloneqq 0 &&&\\
+    &s_1 \coloneqq v / \delta_1 &&& \\
+    &\mathbf{for}\;k=1,2,\hdots &&& \\
+    &\;\; p \coloneqq A^*s_k - \delta_k w_{k-1}& \\
+    &\;\; \gamma_k \coloneqq  \left \lVert p \right \rVert& \\
+    &\;\; w_k \coloneqq  p/ \gamma_k& \\
+    &\;\; q \coloneqq Aw_k - \gamma_k s_k& \\
+    &\;\; \delta_{k+1} \coloneqq \left \lVert q \right \rVert& \\
+    &\;\; s_{k+1} \coloneqq q / \delta_{k+1}& \\
+    & \mathbf{end}&&&
+\end{flalign*}
+\newpage
+Iterace končí v k-tém kroce, pokud $\gamma_{k+1}=0$ nebo $\delta_{k+1}=0$.
+Pokud $\delta_{k+1}=0$, pak platí
+\[ AW_k=S_kL_k,\]
+kde
+\[W_k \equiv [w_1,\hdots,w_k],\; L_k \equiv 
+\begin{bmatrix}
+    \gamma_1 & & & \\
+    \delta_2 & \gamma_2 & & \\
+    & \ddots & \ddots & \\
+    & & \delta_k & \gamma_k \\
+\end{bmatrix},\;
+S_k=[s_1,\hdots,s_k].\]
+Platí, že vektory $w_1,\hdots,w_{k+1}$ a $s_1,\hdots,s_{k+1}$ jsou ortonormální. Máme tedy rozklad A na bidiagonální matici
+\[L_k=S_k^*AW_k\]
+a $W_k$ a $S_k$ jsou ortonormální.
+\end{algoritmus}
 
 Výpočetní náročnost závisí na iteračním procesu, kterým počítáme singulární rozklad bidiagonální matice. Pokud bychom předpokládali, že máme pouze čtvercové matice řádu m, iterační proces rychle konverguje a nezvyšuje počet operací, pak dolní odhad na počet operací je $\frac{16}{3}  m^3$.
 
