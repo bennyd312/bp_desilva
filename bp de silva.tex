@@ -341,8 +341,106 @@ B=P_2 \begin{bmatrix}
 .$$
 
 \newpage
-\subsection{Gauss-Jordanova eliminace}
 \subsection{Sloupcová eliminace}
+Metoda sloupcové eliminace je založena na stejné myšlence jako LU rozklad, nicméně místo poddiagonálních prvků budeme nulovat naddiagonální prvky. Tedy
+$$
+M_1^{-1} = \begin{bmatrix}
+    1 & -\frac{a_{1,2}}{a_{1,1}} & -\frac{a_{1,3}}{a_{1,1}} & \hdots & -\frac{a_{1,n}}{a_{1,1}} \\
+    0 & 1 & 0 & \hdots & 0 \\
+    \vdots & & \ddots & & \\
+    0 & & & & 1
+
+\end{bmatrix},
+$$
+pak
+$$
+A^{(1)} = AM_1^{-1} \begin{bmatrix}
+    a_{1,1} & 0 & 0 & \hdots & 0 \\
+    a_{2,1} & a_{2,2}^{(1)} & a_{2,3}^{(1)} & \hdots & a_{2,n}^{(1)} \\
+    \vdots & \vdots & \vdots & & \vdots \\
+    a_{m,1} & a_{m,2}^{(1)} & \hdots & & a_{m,m}^{(1)}
+\end{bmatrix}.
+$$
+V obecném i-tém kroku ($i<m$) budeme mít 
+$$
+M_i^{-1} = \begin{bmatrix}
+    1 & 0 & \hdots & & & & 0 \\
+    0 & 1 & & & & & 0 \\
+    \vdots & 0 & \ddots & & & \\
+    & & & 1 & -\frac{a_{i,i+1}}{a_{i,i}}& \hdots & -\frac{a_{m,n}}{a_{i,i}} \\ 
+    &  & & & \ddots & & 0 \\
+    &  & & & & & \vdots \\
+    0 & \hdots & & & & 0 & 1
+
+\end{bmatrix}
+$$
+a 
+$$
+A^{(i)}=AM_1^{-1} M_2^{-1} \hdots M_i^{-1} = 
+$$
+$$=
+\begin{bmatrix}
+    a_{1,1} & 0 & \hdots & & & & & &0 \\
+    a_{2,1} & a_{2,2}^{(1)} & 0 & \hdots & & & & & \vdots  \\
+    \vdots & a_{3,2}^{(1)} & a_{3,3}^{(2)} & \ddots & & &  \\
+    & & \ddots & \ddots & & & & & \\
+    & & & a_{i,i-1}^{(i-1)} & a_{i,i}^{(i)} & 0 & \hdots & \\
+    & & & & \ddots & \ddots & & \\
+    a_{m,1} & a_{m,2}^{(1)} & \hdots & & & & a_{m,m}^{(i)}& \hdots & a_{m,n}^{(i)}
+
+\end{bmatrix}.
+$$
+
+Po m-1. kroku tedy dostáváme rozklad
+\[P_1AP_2=[L \; 0]U, U^{-1} = [N_1 \; N_2],\]
+kde $N_1$ je typu $n \times m$ a $N_2$ je typu $n \times (n-m)$, L je dolní trojuhelníková řádu m a U je horní trojuhelníková řádu n.
+Pak už z tohoto rozkladu známe hledanou matici B splňující $AB=0$,
+\[B=P_2N_2\]
+\newpage
+\subsection{Gauss-Jordanova eliminace}
+Tato metoda navazuje na LU rozklad, máme-li tedy rozklad \[P_1AP_2=L[U_1 \; U_2],\] tak v Gauss-Jordanově eliminaci ještě vynulujeme naddiagonální prvky matice $[U_1 \; U_2]$ s tím, že před každým krokem vynormujeme příslušný diagonální prvek tak, aby byl roven 1.
+
+Postup v i-tém kroce je následující
+\[
+M_i^{-1} = \begin{bmatrix}
+    1 & 0 & \hdots & 0 & -a_{1,i}&0 &\hdots & 0 \\
+    0 & 1 & \ddots & & \vdots & & & \vdots   \\
+    \vdots & 0 & \ddots & & -a_{i-1,i} & & \\
+    & & \vdots & & 1 & 0 & \\
+    & & & & & \ddots & \ddots& \\
+    & & & & & & 1 & 0 \\
+    0& \hdots & & & & & 0 & 1
+\end{bmatrix}, \; A^{(i)} = \frac{1}{a_{i,i}^{(i-1)}}M_i^{(-1)}A^{(i-1)}
+\]
+Po m-1. kroku dostáváme
+\[ A^{(m-1)} = M_{m-1}^{-1} \hdots M_2^{-1}M_1^{-1}L[U_1\; U_2] = \begin{bmatrix}
+    1 & 0 & \hdots & 0 & a_{1,m+1}^{(m-1)} & \hdots & a_{1,n}^{(m-1)} \\
+    0 & 1 & & \vdots & a_{2,m+1}^{(m-1)} & \hdots & a_{2,n}^{(m-1)} \\
+    \vdots & 0 & \ddots & & \vdots & & \vdots \\
+    0 & \hdots & 0 & 1 & a_{m+1,m+1}^{(m-1)} & \vdots & a_{m,n}^{(m-1)}
+\end{bmatrix}
+= [I_m \; J]
+\]
+kde
+\[J=\begin{bmatrix}
+    a_{1,m+1}^{(m-1)} & a_{1,m+2}^{(m-1)} & \hdots & a_{1,n}^{(m-1)} \\
+    a_{2,m+1}^{(m-1)} & a_{2,m+2}^{(m-1)} & \hdots & a_{2,n}^{(m-1)} \\
+    \vdots & &\ddots & & \\
+    a_{m+1,m+1}^{(m-1)}& \hdots & & a_{m,n}^{(m-1)}
+\end{bmatrix}
+\]
+Získali jsme tedy následující rozklad 
+\[ P_1 A P_2 = M [I_m \; J]
+,\]
+kde M je řádu m a J je typu $m \times (n-m)$. Potom řešení naší úlohy snadno získáme ve tvaru
+\[ B = P_2 \begin{bmatrix}
+    -J\\
+    I_{n-m}
+\end{bmatrix}
+\]
+
+\newpage
+
 \subsection{QR rozklad}
 \subsection{LQ rozklad}
 
