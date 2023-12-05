@@ -442,7 +442,43 @@ kde M je řádu m a J je typu $m \times (n-m)$. Potom řešení naší úlohy sn
 \newpage
 
 \subsection{QR rozklad}
+Tento rozklad nám rozloží matici A na součin unitární matice Q typu $m \times m$ a horní trojuhelníkové matice R typu $m \times n$, tedy $A=QR.$
+Máme více algoritmů pro výpočet QR rozkladu matice A, konkrétně vybíráme mezi metodami založených na Givensových rotacích, Householderových reflexích a nebo Gram-Schmidtovým ortogonalizačním procesem.V našem případě budeme uvažovat Gram-Schmidtův ortogonalizační proces.Ten nám z matice A iteračně vygeneruje ortonormální bázi $Q=(q_1,\hdots,q_m)$ a matici koeficientů R.
+
+Označme $A=[a_1,a_2,\hdots,a_n]$, kde $a_1,\hdots,a_m$ jsou sloupcové vektory matice A, budeme navíc v každém kroku iterace chtít, aby platilo $span\{a_1,\hdots,a_k\}=span\{q_1,\hdots,q_k\}.$ Postup je pak následující
+\begin{itemize}
+    \item V prvním kroku normováním dostaneme $r_{1,1}= \left \lVert a_1 \right \rVert$ a $q_1 = \frac{a_1}{r_{1,1}}$.
+    \item V druhém kroku musí platit $span\{a_1,a_2\}=span\{q_1,q_2\}$ a $q_1 \perp q_2$, což splníme tím, že odečteme projekci vektoru $a_2$ do podprostoru $span{q_1}$ a vynormujeme. Tedy
+    \[z=(I - q_1q_1^*)a_2=a_2-(q_1^*a_2)q_1, \;\; r_{1,2}= q_1^*a_2, \;\; r_{2,2}= \left \lVert z \right \rVert,\]
+    \[q_2=\frac{z}{r_{2,2}}.\]
+    \item V k-tém kroku stejným postupem odečteme od od vektoru $a_k$ jeho projekci do prostoru $span{q_1,\hdots,q_{k-1}}$ a vynormujeme. Konkrétně
+    \[z=(I-Q_{k-1}Q_{k-1}^*)a_k=a_k - \sum_{i=1}^{k-1}(q_i^*a_k)q_i,\;\; r_{i,k}=q_i^*a_k,\; k=1,\hdots,k-1,\;\; r_{k,k}=\left \lVert z \right \rVert,\]
+    \[q_k=\frac{z}{r_{k,k}}.\]
+\end{itemize}
+Ve výsledku dostáváme unitární matici $Q=[q_1,\hdots,q_m]$ a horní trojuhelníkovou matici typu $m \times n$
+\[R=\begin{bmatrix}
+    r_{1,1} & r_{1,2} & \hdots & r_{1,m} & r_{1,m+1} & \hdots & r_{1,n} \\
+    0 & r_{2,2} & & r_{2,n} & r_{2,m+1} & & r_{2,n} \\
+    \vdots & \ddots & \ddots & & &\vdots \\
+    0 & \vdots & 0 & r_{m,m} & r_{m,m+1} & & r_{m,n}
+\end{bmatrix}\]
+a bude platit rovnost
+\[A=QR.\]
+Ve výpočtu výše jsme předpokládali, že prvních m sloupcových vektorů matice A jsou lineárně nezávislé, což můžeme, neboť matice A je hodnosti m. Permutováním tedy můžeme tyto předpoklady zaručit.
+
+Pomocí QR rozkladu už můžeme snado vyřešit naši úlohu hledání matice B typu $n \times (n-m)$ splňující $AB=0$ následovně
+\[P_1AP_2 = Q[R_1 \; R_2],\]
+\[J=R_1^{-1}R_2,\]
+\[B=P_2 \begin{bmatrix}
+    -J\\
+    I_{n-m}
+\end{bmatrix},\]
+kde pomocí $R=[r_1,\hdots,r_m,r_{m+1},\hdots,r_n]$ značíme $R_1=[r_1,\hdots,r_m],\;\; R_2=[r_{m+1},\hdots,r_n].$
 \subsection{LQ rozklad}
+
+\section{Teoretické porovnání numerických metod}
+V teorii: Numerická stabilita jednotlivých metod, přesnost/chyba, výpočetní cena (kolik operací?), čas výpočtu, různé metody pro různý druh matic?
+Celkově: co bychom od každé metody mohli teoreticky očekávat
 
 
 \end{document}
