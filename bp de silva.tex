@@ -14,7 +14,7 @@
 
 \newtheorem{lemma}[veta]{Lemma}
 \newtheorem*{znaceni}{Značení}
-\newtheorem*{algoritmus}{Algoritmus}
+\newtheorem{algoritmus}{Algoritmus}
 
 \title{Bakalářská práce WIP}
 \author{Benjamin de Silva}
@@ -28,7 +28,7 @@
 Motivace
 \newpage
 
-\section{Definice (hlavní zdroj - linalg skripta}
+\section{Definice (hlavní zdroj - linalg skripta)}
 V této kapitole si zavedeme základní definice potřebné pro práci s maticemi, operace na nich a různé typy matic, které budeme používat.
 
 \begin{definice}[Matice]
@@ -210,18 +210,11 @@ kde $$\Sigma=
     \end{bmatrix} \in \mathbb{R}^{m \times n},\;\; \Sigma_r=diag(\sigma_1,\hdots,\sigma_r)\in\mathbb{R}^{r\times r},\;\;,$$
     $$V=(v_1,\hdots,v_n). U=(u_1,\hdots,u_m).$$
 Ekvivalentně
-$$A=U\Sigma V^*,\;\;A^*=V\Sigma^TU^*$$
+$$A=U\Sigma V^*,\;\;A^*=V\Sigma^TU^*.$$
 
-Vidíme tedy, že pokud bychom byli schopni spočítat singulární rozklad matice A, tak nulový prostor podle \textbf{Lemma 2.3} je roven lineárnímu obalu vektorů $v_{r+1},\hdots,v_n$.
 
-Nyní pomocí SVD můžeme vyřešit úlohu hledání matice B splňující $AB=0$ následovně
-$$P_1AP_2=U\Sigma V,$$
-$$[V_1,V_2]=V^T,$$
-$$B=P_2Q_2$$
-
+Vidíme tedy, že pokud bychom byli schopni spočítat singulární rozklad matice A, tak nulový prostor podle \textbf{Lemma 2.3} je roven lineárnímu obalu vektorů $v_{r+1},\hdots,v_n.$
 \newpage
-
-SVD můžeme vypočítat za pomocí spektrálních rozkladů matic $AA^*$ a $A^*A$, podmíněnost obou matic rovna $\kappa(A)^2$, tedy pokud by byla matice A špatně podmíněna, tak by mohla být singulární čísla spočtena nepřesně.
 
 \begin{veta}
     Mějme matici A $\in \mathbb{R}^{m \times n}$ řádu m a její singulární čísla $\sigma_1\geq\hdots\geq\sigma_m>0.$
@@ -234,51 +227,33 @@ Jelikož platí, že $$\left \lVert A \right \rVert = \sigma_1,\;a\; \left \lVer
 tak dostáváme
 $$\kappa(A)=\sigma_1 / \sigma_n.$$
 
-Další standardní metoda výpočtu SVD probíhá ve dvou krocích
-\begin{enumerate}
-    \item Transformace matice A na bidiagonální tvar užitím unitárních transformací nebo Golub-Kahanovy iterační bidiagonalizace. Transformovaná matice A je ve tvaru 
-    $$B=PAQ,$$
-    kde P,Q jsou unitární a B je bidiagonální.
-    \item Nalezení singulární rozkladu bidiagonální matice B pomocí iteračního procesu, který nuluje její naddiagonální prvky, například pomocí implicitního QR algoritmu.
-\end{enumerate}
+\subsubsection{Výpočet nulového prostoru matice pomocí SVD}
 
-\begin{algoritmus}[Rozklad SVD pomocí Golub-Kahanovy iterační bidiagonalizace]
-Nejprve provedeme Golub-Kahanovu iterační bidiagonalizaci 
-\begin{flalign*}
-    &\mathbf{Vstup} \; A, \; v &&&\\
-    &w_0 \coloneqq 0 &&& \\
-    &\delta_1 \coloneqq 0 &&&\\
-    &s_1 \coloneqq v / \delta_1 &&& \\
-    &\mathbf{for}\;k=1,2,\hdots &&& \\
-    &\;\; p \coloneqq A^*s_k - \delta_k w_{k-1}& \\
-    &\;\; \gamma_k \coloneqq  \left \lVert p \right \rVert& \\
-    &\;\; w_k \coloneqq  p/ \gamma_k& \\
-    &\;\; q \coloneqq Aw_k - \gamma_k s_k& \\
-    &\;\; \delta_{k+1} \coloneqq \left \lVert q \right \rVert& \\
-    &\;\; s_{k+1} \coloneqq q / \delta_{k+1}& \\
-    & \mathbf{end}&&&
-\end{flalign*}
-\newpage
-Iterace končí v k-tém kroce, pokud $\gamma_{k+1}=0$ nebo $\delta_{k+1}=0$.
-Pokud $\delta_{k+1}=0$, pak platí
-\[ AW_k=S_kL_k,\]
-kde
-\[W_k \equiv [w_1,\hdots,w_k],\; L_k \equiv 
-\begin{bmatrix}
-    \gamma_1 & & & \\
-    \delta_2 & \gamma_2 & & \\
-    & \ddots & \ddots & \\
-    & & \delta_k & \gamma_k \\
-\end{bmatrix},\;
-S_k=[s_1,\hdots,s_k].\]
-Platí, že vektory $w_1,\hdots,w_{k+1}$ a $s_1,\hdots,s_{k+1}$ jsou ortonormální. Máme tedy rozklad A na bidiagonální matici
-\[L_k=S_k^*AW_k\]
-a $W_k$ a $S_k$ jsou ortonormální.
+Nyní pomocí SVD můžeme vyřešit úlohu hledání matice B splňující $AB=0$ následovně
+$$P_1AP_2=U\Sigma V,$$
+$$[V_1,V_2]=V^*,$$
+$$B=P_2V_2.$$
+
+SVD můžeme vypočítat za pomocí spektrálních rozkladů matic $AA^*$ a $A^*A$, ovšem podmíněnost obou matic je rovna $\kappa(A)^2$, tedy pokud by byla matice A špatně podmíněna, tak by podle \textbf{Věty 2.6.} mohl být výpočet singulárních čísel nepřesný.
+
+Abychom se vyhnuli problémům se špatnou podmíněností matice, tak využíváme následující standardní metody pro výpočet SVD a následovně i nulový prostor matice A.
+
+\begin{algoritmus}[Výpočet jádra matice pomocí SVD]
+    Mějme matici A typu $m \times n$ hodnosti m.
+    \begin{itemize}
+        \item Transformujeme matici A na bidiagonální tvar užitím unitárních transformací nebo Golub-Kahanovy iterační bidiagonalizace. Transformovaná matice A je ve tvaru
+        \[B=PAQ,\]
+        kde P,Q jsou unitární a B je bidiagonální.
+        \item Nalezení singulární rozkladu bidiagonální matice B pomocí iteračního procesu, který nuluje její naddiagonální prvky, například pomocí implicitního QR algoritmu.
+        \item Máme rozklad $\Sigma=U^*AV$ a nulový prostor matice A tedy odpovídá sloupcovým vektorům $v_{m+1},\hdots,v_n$ matice V, tedy 
+        \[B=[v_{m+1},\hdots,v_n].\]
+    \end{itemize}
 \end{algoritmus}
-
-Výpočetní náročnost závisí na iteračním procesu, kterým počítáme singulární rozklad bidiagonální matice. Pokud bychom předpokládali, že máme pouze čtvercové matice řádu m, iterační proces rychle konverguje a nezvyšuje počet operací, pak dolní odhad na počet operací je $\frac{16}{3}  m^3$.
-
-\newpage
+Algoritmus výše je proveden bez permutací, ovšem v obecném případě, kdy permutujeme matici A na matici $P_1AP_2$, tak můžeme opět aplikovat algoritmus výše a dostaneme rozklad
+\[\Sigma=U^*P_1AP_2V,\]
+a potom platí, že hledaná matice nulového prostoru je
+\[B=P_2V_2.\]
+Složitost výpočtu matice B závisí na iteračním procesu, kterým počítáme singulární rozklad bidiagonální matice. Kdybychom předpokládali, že A je čtvercová matice řádu m, iterační proces rychle konverguje a nezvyšuje počet operací, pak dolní odhad na počet operací je $\frac{16}{3}  m^3$.
 
 \subsection{LU rozklad}
 Jednou z nejdůležitejších metod pro řešení soustav lineárních rovnic je LU rozklad, který nám původní matici A rozloží na součin dolní trojuhelníkové matice a horní trojuhelníkové matice. LU rozklad je založen na Gaussově eliminaci následovně
@@ -329,18 +304,23 @@ L \equiv M_1M_2\hdots M_{m-1},
 $$
 kde U je horní trojuhelníková typu $m \times n$ a L je dolní trojuhelníková řádu m s jednotkami na diagonále a upravením rovnosti dostáváme
 $$A=LU=L[U_1 \; U_2],\;\; U_1=[u_1,\hdots,u_m],\;\; U_2=[u_{m+1},\hdots,u_n].$$
-Nyní můžeme LU rozklad použít k řešení naší úlohy $AB=0$
 
-$$
-P_1AP_2= L[U_1 U_2],
-J=U_1^{-1}U_2,
-B=P_2 \begin{bmatrix}
-    -J\\
-    I_{n-m}
-\end{bmatrix}
-.$$
+\subsubsection{Výpočet jádra matice pomocí LU rozkladu}
+Nyní můžeme LU rozklad použít k řešení naší úlohy $AB=0$.
+\begin{algoritmus}[Výpočet jádra pomocí LU rozkladu]
+    Mějme matici A typu $m \times n$ hodnosti m.
+    \begin{itemize}
+        \item Provedeme potřebné permutace matice A na matici $P_1AP_2$, abychom měli rozklad matice v hledaném tvaru.
+        \item Pomocí nějaké varianty vypočítáme LU rozklad, tedy $P_1AP_2=LU=L[U_1 \; U_2].$
+        \item Položíme $J=U_1^{-1}U_2$, pak hledané řešení úlohy je
+        \[B=P_2 \begin{bmatrix}
+            -J\\
+            I_{n-m}
+        \end{bmatrix}
+        \]
+    \end{itemize}
+\end{algoritmus}
 
-\newpage
 \subsection{Sloupcová eliminace}
 Metoda sloupcové eliminace je založena na stejné myšlence jako LU rozklad, nicméně místo poddiagonálních prvků budeme nulovat naddiagonální prvky. Tedy
 $$
@@ -358,7 +338,7 @@ A^{(1)} = AM_1^{-1} \begin{bmatrix}
     a_{1,1} & 0 & 0 & \hdots & 0 \\
     a_{2,1} & a_{2,2}^{(1)} & a_{2,3}^{(1)} & \hdots & a_{2,n}^{(1)} \\
     \vdots & \vdots & \vdots & & \vdots \\
-    a_{m,1} & a_{m,2}^{(1)} & \hdots & & a_{m,m}^{(1)}
+    a_{m,1} & a_{m,2}^{(1)} & \hdots & & a_{m,n}^{(1)}
 \end{bmatrix}.
 $$
 V obecném i-tém kroku ($i<m$) budeme mít 
@@ -394,9 +374,18 @@ $$
 Po m-1. kroku tedy dostáváme rozklad
 \[P_1AP_2=[L \; 0]U, U^{-1} = [N_1 \; N_2],\]
 kde $N_1$ je typu $n \times m$ a $N_2$ je typu $n \times (n-m)$, L je dolní trojuhelníková řádu m a U je horní trojuhelníková řádu n.
-Pak už z tohoto rozkladu známe hledanou matici B splňující $AB=0$,
-\[B=P_2N_2\]
-\newpage
+\subsubsection{Výpočet jádra matice pomocí sloupcové eliminace}
+\begin{algoritmus}[Výpočet jádra pomocí sloupcové eliminace]
+    Mějme matici A typu $m \times n$ hodnosti m.
+    \begin{itemize}
+        \item Permutováním převedeme A na $P_1AP_2.$
+        \item Provedeme analogii Gaussovy eliminace pro sloupcovou eliminaci a získáme rozklad $P_1AP_2=[L \; 0] U.$
+        \item Položíme $U^{-1}=[N_1 \; N_2]$, potom hledaná matice nulového prostoru je
+        \[B=P_2N_2.\]
+    \end{itemize}
+    
+\end{algoritmus}
+
 \subsection{Gauss-Jordanova eliminace}
 Tato metoda navazuje na LU rozklad, máme-li tedy rozklad \[P_1AP_2=L[U_1 \; U_2],\] tak v Gauss-Jordanově eliminaci ještě vynulujeme naddiagonální prvky matice $[U_1 \; U_2]$ s tím, že před každým krokem vynormujeme příslušný diagonální prvek tak, aby byl roven 1.
 
@@ -432,14 +421,22 @@ kde
 Získali jsme tedy následující rozklad 
 \[ P_1 A P_2 = M [I_m \; J]
 ,\]
-kde M je řádu m a J je typu $m \times (n-m)$. Potom řešení naší úlohy snadno získáme ve tvaru
-\[ B = P_2 \begin{bmatrix}
-    -J\\
-    I_{n-m}
-\end{bmatrix}
-\]
-
-\newpage
+kde M je řádu m a J je typu $m \times (n-m)$.
+\subsubsection{Výpočet jádra pomocí Gauss-Jordanovy eliminace}
+\begin{algoritmus}[Výpočet jádra pomocí Gauss Jordanovy eliminace]
+    Mějme matici A typu $m \times n$ hodnosti m.
+    \begin{itemize}
+        \item Provedeme potřebné permutace a převedeme matici A na matici $P_1AP_2.$
+        \item Vypočítáme LU rozklad matice $P_1AP_2=LU.$
+        \item Postupným přenásobováním a sloupcovou eliminací získáme požadovaný rozklad $ P_1 A P_2 = M [I_m \; J]$
+        \item Hledaný nulový prostor matice A je roven \[B=P_2 \begin{bmatrix}
+            -J\\
+            I_{n-m}
+        \end{bmatrix}.\]
+    \end{itemize}
+    
+    
+\end{algoritmus}
 
 \subsection{QR rozklad}
 Tento rozklad nám rozloží matici A na součin unitární matice Q typu $m \times m$ a horní trojuhelníkové matice R typu $m \times n$, tedy $A=QR.$
@@ -466,14 +463,20 @@ a bude platit rovnost
 \[A=QR.\]
 Ve výpočtu výše jsme předpokládali, že prvních m sloupcových vektorů matice A jsou lineárně nezávislé, což můžeme, neboť matice A je hodnosti m. Permutováním tedy můžeme tyto předpoklady zaručit.
 
-Pomocí QR rozkladu už můžeme snado vyřešit naši úlohu hledání matice B typu $n \times (n-m)$ splňující $AB=0$ následovně
-\[P_1AP_2 = Q[R_1 \; R_2],\]
-\[J=R_1^{-1}R_2,\]
-\[B=P_2 \begin{bmatrix}
-    -J\\
-    I_{n-m}
-\end{bmatrix},\]
-kde pomocí $R=[r_1,\hdots,r_m,r_{m+1},\hdots,r_n]$ značíme $R_1=[r_1,\hdots,r_m],\;\; R_2=[r_{m+1},\hdots,r_n].$
+\subsubsection{Výpočet jádra pomocí QR rozkladu}
+Mějme matici A typu $m \times n$ hodnosti m.
+\begin{algoritmus}[Výpočet jádra pomocí QR rozkladu]
+    Mějme matici A typu $m \times n$ hodnosti m.
+    \begin{itemize}
+        \item Permutováním převedeme A na $P_1AP_2.$
+        \item Pomocí vhodné metody vypočítáme QR rozklad $P_1AP_2=QR=Q[R_1 \; R_2].$
+        \item Položíme $J=R_1^{-1}R_2.$ Potom hledaná matice nulového prostoru je \[B=P_2 \begin{bmatrix}
+            -J\\
+            I_{n-m}
+        \end{bmatrix}.\]
+    \end{itemize}
+    kde pomocí $R=[r_1,\hdots,r_m,r_{m+1},\hdots,r_n]$ značíme $R_1=[r_1,\hdots,r_m],\;\; R_2=[r_{m+1},\hdots,r_n].$
+\end{algoritmus}
 \subsection{LQ rozklad}
 
 \section{Teoretické porovnání numerických metod}
