@@ -478,10 +478,51 @@ Mějme matici A typu $m \times n$ hodnosti m.
     kde pomocí $R=[r_1,\hdots,r_m,r_{m+1},\hdots,r_n]$ značíme $R_1=[r_1,\hdots,r_m],\;\; R_2=[r_{m+1},\hdots,r_n].$
 \end{algoritmus}
 \subsection{LQ rozklad}
+Tento rozklad rozloží matici A na součin
+\[A = [L\; 0]Q=[L\; 0] \begin{bmatrix}
+    Q_1\\
+    Q_2
+\end{bmatrix},\]
+kde L je dolní trojuhelníková typu $m \times m$ a Q je unitární typu $n \times n$, $Q_1$ je typu $m \times n$ a $Q_2$ je typu $(n-m)\times n.$
+LQ rozklad pomocí unitárních transformací aplikovaných zprava nuluje naddiagonální prvky matice A, tedy
+\[AQ=[L\; 0] \iff A=[L\; 0] Q^*.\]
+\subsubsection{Vypočet jádra pomocí LQ rozkladu}
+\begin{algoritmus}{Vypočet jádra pomocí LQ rozkladu}
+    \begin{itemize}
+        Mějme matici A typu $m \times n.$
+        \item Provedeme potřebné permutace a převedeme matici A na matici $P_1AP_2.$
+        \item Vypočítáme pomocí vhodně zvolené metody rozklad $P_1AP_2=[L\; 0]Q = [L\; 0] \begin{bmatrix}
+            Q_1\\
+            Q_2
+            \end{bmatrix}$
+        \item Hledaná matice nulového prostoru je 
+        \[B=P_2Q_2.\]
+    \end{itemize}
+    
+\end{algoritmus}
 
-\section{Teoretické porovnání numerických metod}
-V teorii: Numerická stabilita jednotlivých metod, přesnost/chyba, výpočetní cena (kolik operací?), čas výpočtu, různé metody pro různý druh matic?
-Celkově: co bychom od každé metody mohli teoreticky očekávat
 
+\section{Vlastnosti metod}
+V této části se podíváme na vlastnosti uvedených metod, konkrétně na počet provedených operací, pamětové náročnosti a jejich numerické vlastnosti. Konkrétně se pokusíme identifikovat, v jakých situacích by u daných metod mohly vznikat komplikace.
 
+\subsection{Gauss-Jordanova eliminace}
+Jelikož cílem této metody je dostat jednotkovou matici na diagonále, tak tato metoda bude potřebovat velký počet eliminací.
+Pokud budeme uvažovat A řídkou matici, tak v procesu eliminace bude docházet k zaplnění a ačkoliv eliminačním procesem prvky vynulují, tak je třeba uchovat tyto nově nenulové prvky v paměti.
+Pro rozklad $P_1AP_2=M[I_m\; J]$ je matice J obvykle hustá a bude zabírat velké množství paměti pro velké n-m.
+Může také dojít k numerickým problémům s pivotací, například už i pro Gaussovu eliminaci pro matici řádu n platí
+\[\begin{bmatrix}
+    1 & & & & 1 \\
+    -1 & 1 & & & 1 \\
+    \vdots & \ddots & \ddots &  & \vdots \\
+    -1 & \hdots & -1 & 1 & 1 \\
+    -1 & \hdots & -1 & -1 & 1 \\   
+\end{bmatrix}
+\longrightarrow
+\begin{bmatrix}
+    1 & & & & 1 \\
+    0& 1 & & & 2 \\
+    \vdots & \ddots & \ddots & & \vdots \\
+    0 & \hdots & 0 & 1 & 2^{n-2} \\
+    0 & \hdots & 0 & 0 & 2^{n-1}
+\end{bmatrix}\]
 \end{document}
